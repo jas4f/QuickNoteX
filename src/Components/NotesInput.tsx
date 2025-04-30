@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 import { Tag } from "../App";
 import {NotesInputProps} from './NotesFormapp'
 import { v4 as uuidV4 } from "uuid"
-
+import { useNavigate } from "react-router-dom";
 
  const NotesInput = ({onSubmit, onAddTag, availableTags, title = "" , markdown = "", tags = []} : NotesInputProps) => {
-
+const navigate = useNavigate();
  const titleRef = useRef<HTMLInputElement>(null)
  const markdownRef = useRef<HTMLTextAreaElement>(null)
  const [selectedTags,setSelectedTags] = useState<Tag[]>([])
@@ -22,6 +22,8 @@ import { v4 as uuidV4 } from "uuid"
         markdown: markdownRef.current!.value,
         tags: selectedTags,
     })
+
+  navigate('/');
  }
  return(
     <>

@@ -20,6 +20,12 @@ type EditTagsModalProps = {
 
 }
 
+type DeleteAllModelProps = {
+    show : boolean
+    handleClose : () => void,
+    handleDeleteAll : () => void
+}
+
 type SimplifiedNote = {
     id : string,
     tags : Tag[],
@@ -36,6 +42,7 @@ type SimplifiedNote = {
     const [title,setTitle] = useState<string>("");
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const [eidtTagsModalIsOpen , setEditTagsModalIsOpen] = useState(false);
+      const [show, setShow] = useState<boolean>(false);
 
     const filteredNotes = useMemo(()=>{
         return notes.filter(note=>{
@@ -50,27 +57,30 @@ type SimplifiedNote = {
         })
     },[title, selectedTags, notes])
     
+     const handleClose = () => setShow(false);
+     const handleShow = () => setShow(true);
 
-    const handleDeleteAll = (e)=>{
-        e.preventDefault();
+
+    const handleDeleteAll = ()=>{
+        handleClose();
          setNote([]);
     }
     return(
 
     <>
-    <Row>
+    <Row className="d-flex gap-5">
         <Col>
         <h2>Notes</h2>
         </Col>
         <Col>
-        <Stack>
+        <Stack direction="horizontal" gap={5}>
             <Link to='/new'>
             <Button variant="primary">Create</Button>
             </Link>
             <Button onClick={()=> setEditTagsModalIsOpen(true)} variant="outline-secondary">
              Edit Tags
             </Button>
-            <Button onClick={handleDeleteAll}>Delete All</Button>
+            <Button onClick={handleShow}>Delete All</Button>
         </Stack>
         </Col>
     </Row>
@@ -122,6 +132,12 @@ type SimplifiedNote = {
     show={eidtTagsModalIsOpen}
     handleClose = {()=> setEditTagsModalIsOpen(false)}
     availableTags={availableTags}
+    />
+
+    <DeleteAll 
+    handleClose={handleClose}
+    show={show}
+    handleDeleteAll={handleDeleteAll}
     />
     </>
   )
@@ -193,6 +209,27 @@ const EditTagsModal = ({onUpdateTag,onDeleteTag,show,handleClose,availableTags} 
     </Modal>
     </>
    )
+}
+
+const DeleteAll = ({handleClose,show, handleDeleteAll}: DeleteAllModelProps)=>{
+    return(
+        <>
+         <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>DeleteAll</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you want to Delete All Notes ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleDeleteAll}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+        </>
+    )
 }
 
  export default NoteList;
